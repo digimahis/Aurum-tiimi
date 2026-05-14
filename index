@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+
+<html lang="fi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurum — Tiimin infosivu</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dark:   #040a14;
+    --dark2:  #071020;
+    --dark3:  #0d1d30;
+    --blue:   #1a6fff;
+    --blue-light: #3d8cff;
+    --cyan:   #00cfff;
+    --text:   #ddeeff;
+    --muted:  #6a8fad;
+    --border: rgba(26,111,255,0.18);
+    --gold:   #c8a84b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    background:var(--dark);
+    color:var(--text);
+    font-family:'DM Sans',sans-serif;
+    font-weight:300;
+    line-height:1.75;
+    overflow-x:hidden;
+  }
+  body::before {
+    content:'';
+    position:fixed; inset:0; z-index:0;
+    background-image:
+      linear-gradient(rgba(26,111,255,0.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(26,111,255,0.04) 1px,transparent 1px);
+    background-size:48px 48px;
+    pointer-events:none;
+  }
+
+/* LOGIN */
+#login-screen {
+position:fixed; inset:0; z-index:999;
+display:flex; align-items:center; justify-content:center;
+background:var(–dark); padding:24px;
+}
+.login-box {
+width:100%; max-width:400px;
+padding:48px 40px;
+background:linear-gradient(145deg,rgba(13,29,48,0.98),rgba(4,10,20,0.98));
+border:1px solid var(–border);
+border-radius:20px;
+text-align:center;
+position:relative; overflow:hidden;
+}
+.login-box::before {
+content:’’;
+position:absolute; top:-60px; left:50%; transform:translateX(-50%);
+width:200px; height:200px;
+background:radial-gradient(circle,rgba(0,207,255,0.12),transparent 70%);
+border-radius:50%; pointer-events:none;
+}
+.login-logo {
+font-family:‘Orbitron’,sans-serif;
+font-size:28px; font-weight:900;
+letter-spacing:4px; color:#fff; margin-bottom:4px;
+}
+.login-logo span { color:var(–cyan); }
+.login-sub {
+font-size:11px; letter-spacing:3px; text-transform:uppercase;
+color:var(–muted); margin-bottom:36px;
+}
+.login-box label {
+display:block; text-align:left;
+font-size:11px; letter-spacing:2px; text-transform:uppercase;
+color:var(–muted); margin-bottom:8px;
+}
+.login-box input[type=password] {
+width:100%; padding:14px 18px;
+background:rgba(255,255,255,0.04);
+border:1px solid var(–border);
+border-radius:10px;
+color:var(–text);
+font-family:‘DM Sans’,sans-serif;
+font-size:16px; outline:none;
+transition:border-color 0.2s; margin-bottom:20px;
+}
+.login-box input[type=password]:focus { border-color:var(–cyan); }
+.btn-login {
+width:100%; padding:14px;
+background:linear-gradient(135deg,var(–blue),var(–cyan));
+border:none; border-radius:10px;
+color:#fff; font-family:‘DM Sans’,sans-serif;
+font-size:15px; font-weight:500; letter-spacing:1px;
+cursor:pointer; transition:opacity 0.2s,transform 0.15s;
+}
+.btn-login:hover { opacity:0.9; transform:translateY(-1px); }
+.login-err {
+margin-top:14px; font-size:13px;
+color:#ff6b6b; display:none;
+}
+
+/* MAIN */
+#main { display:none; position:relative; z-index:1; }
+
+/* NAV */
+nav {
+position:sticky; top:0; z-index:100;
+padding:0 32px;
+background:rgba(4,10,20,0.92);
+backdrop-filter:blur(16px);
+border-bottom:1px solid var(–border);
+display:flex; align-items:center; justify-content:space-between;
+height:64px;
+}
+.nav-logo {
+font-family:‘Orbitron’,sans-serif;
+font-weight:900; font-size:18px; letter-spacing:3px; color:#fff;
+}
+.nav-logo span { color:var(–cyan); }
+.nav-links { display:flex; gap:24px; list-style:none; }
+.nav-links a {
+color:var(–muted); text-decoration:none;
+font-size:12px; letter-spacing:1px; transition:color 0.2s;
+}
+.nav-links a:hover { color:var(–cyan); }
+
+/* HERO */
+.hero {
+min-height:90vh;
+display:flex; align-items:center; justify-content:center;
+flex-direction:column; text-align:center;
+padding:80px 24px 60px; position:relative;
+}
+.hero::after {
+content:’’; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+width:600px; height:1px;
+background:linear-gradient(90deg,transparent,var(–blue),transparent);
+}
+.hero-badge {
+display:inline-flex; align-items:center; gap:8px;
+padding:6px 18px;
+border:1px solid rgba(0,207,255,0.3);
+border-radius:100px;
+font-size:11px; letter-spacing:2.5px; text-transform:uppercase;
+color:var(–cyan); margin-bottom:36px;
+background:rgba(0,207,255,0.06);
+}
+.hero-badge::before {
+content:’’; width:6px; height:6px; border-radius:50%;
+background:var(–cyan); animation:pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+.hero h1 {
+font-family:‘Orbitron’,sans-serif;
+font-size:clamp(34px,7vw,80px);
+font-weight:900; line-height:1.05;
+letter-spacing:2px; margin-bottom:16px;
+}
+.hero h1 .grad {
+display:block;
+background:linear-gradient(135deg,var(–blue-light),var(–cyan));
+-webkit-background-clip:text; -webkit-text-fill-color:transparent;
+background-clip:text;
+}
+.hero-desc {
+max-width:560px; font-size:17px; color:var(–muted);
+margin-bottom:40px; line-height:1.8;
+}
+.hero-note {
+display:inline-block; padding:14px 28px;
+border:1px solid var(–border); border-radius:14px;
+font-size:15px; color:var(–text);
+background:rgba(26,111,255,0.06);
+max-width:580px; line-height:1.7;
+}
+.hero-note strong { color:var(–cyan); }
+
+/* SECTIONS */
+section { padding:80px 24px; max-width:960px; margin:0 auto; }
+.section-label {
+font-size:11px; letter-spacing:3px; text-transform:uppercase;
+color:var(–cyan); margin-bottom:16px;
+display:flex; align-items:center; gap:12px;
+}
+.section-label::after {
+content:’’; flex:1; height:1px;
+background:linear-gradient(90deg,var(–border),transparent);
+}
+h2 {
+font-family:‘Orbitron’,sans-serif;
+font-size:clamp(22px,4vw,36px);
+font-weight:700; letter-spacing:1px;
+margin-bottom:24px; line-height:1.2;
+}
+p { color:var(–muted); margin-bottom:16px; font-size:16px; }
+p strong { color:var(–text); font-weight:500; }
+
+/* CARDS */
+.card {
+background:linear-gradient(145deg,var(–dark3),var(–dark2));
+border:1px solid var(–border);
+border-radius:16px; padding:32px;
+margin-bottom:20px; position:relative; overflow:hidden;
+transition:border-color 0.25s;
+}
+.card:hover { border-color:rgba(26,111,255,0.4); }
+.card::before {
+content:’’; position:absolute; top:0; left:0; right:0; height:1px;
+background:linear-gradient(90deg,transparent,rgba(0,207,255,0.4),transparent);
+}
+.card-icon { font-size:28px; margin-bottom:16px; }
+.card h3 {
+font-family:‘Orbitron’,sans-serif;
+font-size:14px; font-weight:700;
+letter-spacing:1.5px; color:#fff; margin-bottom:12px;
+}
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+
+/* FEATURE LIST */
+.feature-list { list-style:none; margin-top:16px; }
+.feature-list li {
+display:flex; align-items:flex-start; gap:12px;
+padding:10px 0; border-bottom:1px solid rgba(26,111,255,0.08);
+font-size:15px; color:var(–muted);
+}
+.feature-list li:last-child { border-bottom:none; }
+.feature-list li::before { content:‘→’; color:var(–cyan); font-size:13px; margin-top:3px; flex-shrink:0; }
+
+/* STATS */
+.stats-row {
+display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:32px 0;
+}
+.stat-box {
+border:1px solid var(–border); border-radius:14px;
+padding:24px 20px; text-align:center; background:var(–dark3);
+}
+.stat-num {
+font-family:‘Orbitron’,sans-serif; font-size:26px; font-weight:900;
+color:var(–cyan); display:block; margin-bottom:6px;
+}
+.stat-label { font-size:12px; color:var(–muted); letter-spacing:1px; }
+
+/* PRICING */
+.pricing-grid {
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(195px,1fr));
+gap:14px; margin-top:24px;
+}
+.plan-card {
+border:1px solid var(–border); border-radius:14px;
+padding:20px 18px; background:var(–dark3);
+transition:border-color 0.2s,transform 0.2s;
+}
+.plan-card:hover { border-color:var(–blue); transform:translateY(-2px); }
+.plan-name {
+font-family:‘Orbitron’,sans-serif; font-size:11px; font-weight:700;
+letter-spacing:2px; color:#fff; margin-bottom:8px;
+}
+.plan-return {
+font-size:22px; font-weight:500; color:var(–cyan);
+margin-bottom:10px; font-family:‘Orbitron’,sans-serif;
+}
+.plan-info { font-size:12px; color:var(–muted); line-height:1.8; }
+.plan-share { color:var(–text); font-weight:500; }
+
+/* VIDEO */
+.video-wrap {
+border:1px solid var(–border); border-radius:16px;
+overflow:hidden; background:var(–dark3);
+aspect-ratio:16/9;
+display:flex; align-items:center; justify-content:center;
+flex-direction:column; gap:14px; margin:24px 0;
+}
+.video-play {
+width:72px; height:72px; border-radius:50%;
+background:linear-gradient(135deg,var(–blue),var(–cyan));
+display:flex; align-items:center; justify-content:center;
+font-size:26px;
+box-shadow:0 0 40px rgba(0,207,255,0.3);
+}
+.video-label { font-size:13px; color:var(–muted); letter-spacing:1px; }
+.video-hint { font-size:11px; color:rgba(106,143,173,0.5); }
+
+/* DISCLAIMER */
+.disclaimer {
+border:1px solid rgba(200,168,75,0.25); border-radius:12px;
+padding:20px 24px;
+background:rgba(200,168,75,0.04);
+font-size:13px; color:rgba(200,168,75,0.7);
+margin-top:32px; line-height:1.7;
+}
+.disclaimer strong { color:var(–gold); }
+
+/* FORM */
+.form-wrap {
+background:var(–dark3); border:1px solid var(–border);
+border-radius:16px; padding:40px;
+}
+.form-row { margin-bottom:20px; }
+.form-row label {
+display:block; font-size:11px; letter-spacing:2px; text-transform:uppercase;
+color:var(–muted); margin-bottom:8px;
+}
+.form-row input,
+.form-row textarea {
+width:100%; padding:13px 16px;
+background:rgba(255,255,255,0.04);
+border:1px solid var(–border); border-radius:10px;
+color:var(–text); font-family:‘DM Sans’,sans-serif;
+font-size:15px; outline:none; transition:border-color 0.2s; resize:vertical;
+}
+.form-row input:focus,
+.form-row textarea:focus { border-color:var(–cyan); }
+.btn-submit {
+padding:14px 40px;
+background:linear-gradient(135deg,var(–blue),var(–cyan));
+border:none; border-radius:10px;
+color:#fff; font-family:‘DM Sans’,sans-serif;
+font-size:15px; font-weight:500; letter-spacing:1px;
+cursor:pointer; transition:opacity 0.2s,transform 0.15s;
+}
+.btn-submit:hover { opacity:0.88; transform:translateY(-1px); }
+.form-success {
+display:none; padding:16px 20px; margin-top:16px;
+background:rgba(0,207,255,0.08);
+border:1px solid rgba(0,207,255,0.3);
+border-radius:10px; color:var(–cyan); font-size:14px;
+}
+
+.divider {
+height:1px; max-width:960px; margin:0 auto;
+background:linear-gradient(90deg,transparent,var(–border),transparent);
+}
+
+footer {
+padding:40px 24px; text-align:center;
+font-size:13px; color:var(–muted);
+border-top:1px solid var(–border); margin-top:40px;
+}
+footer a { color:var(–muted); text-decoration:none; }
+footer a:hover { color:var(–cyan); }
+
+/* ANIMATIONS */
+.fade-in { opacity:0; transform:translateY(24px); transition:opacity 0.6s ease,transform 0.6s ease; }
+.fade-in.visible { opacity:1; transform:translateY(0); }
+
+@media(max-width:640px) {
+nav { padding:0 16px; }
+.nav-links { gap:12px; }
+.nav-links a { font-size:10px; }
+.two-col { grid-template-columns:1fr; }
+.stats-row { grid-template-columns:1fr; }
+section { padding:60px 16px; }
+.form-wrap { padding:24px 20px; }
+.login-box { padding:36px 28px; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- LOGIN -->
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">AURU<span>M</span></div>
+    <div class="login-sub">Digivire — Tiimin infosivu</div>
+    <label for="pw">Salasana</label>
+    <input type="password" id="pw" placeholder="Kirjoita salasana..."
+           onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="btn-login" onclick="tryLogin()">Kirjaudu sisään</button>
+    <div class="login-err" id="login-err">Väärä salasana. Pyydä Jennalta oikea salasana.</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+
+<div id="main">
+
+  <nav>
+    <div class="nav-logo">AURU<span>M</span></div>
+    <ul class="nav-links">
+      <li><a href="#mika">Mikä Aurum</a></li>
+      <li><a href="#tuotteet">Tuotteet</a></li>
+      <li><a href="#hinnat">Hinnat</a></li>
+      <li><a href="#partneri">Partneri</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#yhteys">Kysy lisää</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+
+  <div class="hero">
+    <div class="hero-badge">Tervetuloa Aurum-tiimiin</div>
+    <h1>
+      Laita tekoäly
+      <span class="grad">töihin puolestasi</span>
+    </h1>
+    <p class="hero-desc">
+      Olet osa Digiviren Aurum-tiimiä. Tältä sivulta löydät kaiken oleellisen — mitä Aurum on, miten se toimii, ja miten pääset alkuun.
+    </p>
+    <div class="hero-note">
+      Voit olla mukana kahdella tavalla:<br>
+      <strong>Käyttäjänä</strong> — hyödynnät tekoälybottia omaan kaupankäyntiin.<br>
+      <strong>Partnerina</strong> — rakennat tiimiä ja ansaitset siitä lisätuloa.
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- 01 MIKÄ AURUM -->
+
+  <section id="mika">
+    <div class="section-label fade-in">01 — Mikä on Aurum</div>
+    <h2 class="fade-in">Finanssiteknologiaa<br>tavalliselle ihmiselle</h2>
+    <p class="fade-in">Aurum on tekoälyyn perustuva finanssiteknologiayhtiö. Automaattinen kaupankäynti ja kehittyneet algoritmit ovat perinteisesti olleet vain pankkien ja hedge-rahastojen käytössä — Aurum tuo saman teknologian yksityishenkilöille.</p>
+    <p class="fade-in">Alustan johtaja on <strong>Bryan Benson</strong>, jonka tausta on finanssiteknologiassa, kaupankäynnissä ja digitaalisten alustojen kehittämisessä. Hän on Forbes Finance Councilin tunnustama asiantuntija ja hänen taustansa on julkisesti tarkistettavissa.</p>
+    <div class="two-col" style="margin-top:32px;">
+      <div class="card fade-in">
+        <div class="card-icon">🤖</div>
+        <h3>Automatisoitu kaupankäynti</h3>
+        <p>Botti seuraa markkinoita ja tekee toimeksiantoja automaattisesti. Sinun ei tarvitse olla aktiivisesti mukana.</p>
+      </div>
+      <div class="card fade-in">
+        <div class="card-icon">🔒</div>
+        <h3>Riskienhallinta ensin</h3>
+        <p>Ei aggressiivista kaupankäyntiä, ei vipua, ei marginaalikauppaa. Vakaa ja harkittu lähestymistapa.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 02 TUOTTEET -->
+
+  <section id="tuotteet">
+    <div class="section-label fade-in">02 — Aurumin tuotteet</div>
+    <h2 class="fade-in">Mitä alustalta löytyy</h2>
+
+```
+<div class="card fade-in" style="margin-top:24px;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <div>
+      <h3>⚡ AURUM EX-AI BOT</h3>
+      <p style="margin:0;font-size:13px;color:var(--muted);">Julkaistu Q1 / 2023</p>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-family:'Orbitron',sans-serif;font-size:24px;color:var(--cyan);">+538%</div>
+      <div style="font-size:11px;color:var(--muted);">kokonaistuotto lanseerauksesta</div>
+    </div>
+  </div>
+  <p>Tekoälypohjainen kaupankäyntibotti joka toimii kryptomarkkinoilla automaattisesti, 24/7. Se seuraa markkinaliikkeitä ja tekee osto- ja myyntitoimeksiantoja datan perusteella — ilman tunteisiin perustuvia päätöksiä.</p>
+  <ul class="feature-list">
+    <li>Ei aggressiivista kaupankäyntiä eikä vipu- tai marginaalikauppaa</li>
+    <li>Toimii automaattisesti 24/7 — ei vaadi päivittäisiä toimenpiteitä</li>
+    <li>Perustuu markkinadataan, ei arvailuun</li>
+    <li>Painottaa riskienhallintaa pitkällä aikavälillä</li>
+    <li>Ei ole tehnyt yhtäkään tappiollista kuukautta koko historiaansa aikana</li>
+  </ul>
+</div>
+
+<div class="stats-row fade-in">
+  <div class="stat-box">
+    <span class="stat-num">+16,85%</span>
+    <span class="stat-label">Kuukausituotto tammikuu 2026</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-num">77M+</span>
+    <span class="stat-label">USDT kaupankäyntipooli</span>
+  </div>
+  <div class="stat-box">
+    <span class="stat-num">3 v</span>
+    <span class="stat-label">0 tappiollista kuukautta</span>
+  </div>
+</div>
+
+<div class="card fade-in">
+  <div class="card-icon">🧠</div>
+  <h3>NEYRO — Tekoälypohjainen analyysi</h3>
+  <p>Aurumin toinen tekoälytyökalu markkinoiden seurantaan ja analyysiin. Tukee päätöksentekoa markkinadatan pohjalta.</p>
+</div>
+
+<div class="two-col fade-in">
+  <div class="card">
+    <div class="card-icon">🏦</div>
+    <h3>AURUM NEOBANK</h3>
+    <p>Digitaalinen pankkipalvelu Aurum-ekosysteemin sisällä. Helpottaa varojen hallintaa ja siirtoja alustan käyttäjille.</p>
+  </div>
+  <div class="card">
+    <div class="card-icon">🥇</div>
+    <h3>AURUM KULTA</h3>
+    <p>Kultaan sidottu omaisuudensuojavaihtoehto Aurumin ekosysteemin sisällä. Lisätietoja Aurumin omalta sivustolta.</p>
+  </div>
+</div>
+```
+
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 03 HINNAT -->
+
+  <section id="hinnat">
+    <div class="section-label fade-in">03 — Hinnat ja tasot</div>
+    <h2 class="fade-in">Mitä Aurum maksaa</h2>
+    <p class="fade-in">Alustan käyttö maksaa <strong>19,99 USD / vuosi</strong>. Kaupankäyntiin käytettävä sijoituspääoma on aina sinun omasi — täysin erillinen vuosimaksusta. Minimi aloitussijoitus on <strong>100 USD</strong>.</p>
+    <p class="fade-in">Tuotot jaetaan sinun ja alustan välillä tason mukaan. Mitä enemmän sijoitat, sitä suuremman osuuden tuotoista pidät itsellesi.</p>
+
+```
+<div class="pricing-grid fade-in">
+  <div class="plan-card">
+    <div class="plan-name">BASIC</div>
+    <div class="plan-return">~10,50%</div>
+    <div class="plan-info"><span class="plan-share">Sinulle 60%</span><br>100–249 USD</div>
+  </div>
+  <div class="plan-card">
+    <div class="plan-name">STANDARD</div>
+    <div class="plan-return">~11,37%</div>
+    <div class="plan-info"><span class="plan-share">Sinulle 65%</span><br>250–999 USD</div>
+  </div>
+  <div class="plan-card">
+    <div class="plan-name">COMFORT</div>
+    <div class="plan-return">~12,25%</div>
+    <div class="plan-info"><span class="plan-share">Sinulle 70%</span><br>1 000–2 499 USD</div>
+  </div>
+  <div class="plan-card">
+    <div class="plan-name">OPTIMAL</div>
+    <div class="plan-return">~13,12%</div>
+    <div class="plan-info"><span class="plan-share">Sinulle 75%</span><br>2 500–4 999 USD</div>
+  </div>
+  <div class="plan-card">
+    <div class="plan-name">BUSINESS</div>
+    <div class="plan-return">~14,00%</div>
+    <div class="plan-info"><span class="plan-share">Sinulle 80%</span><br>5 000–9 999 USD</div>
+  </div>
+  <div class="plan-card">
+    <div class="plan-name">VIP</div>
+    <div class="plan-return">~14,88%</div>
+    <div class="plan-info"><span class="plan-share">Sinulle 85%</span><br>10 000–24 999 USD</div>
+  </div>
+  <div class="plan-card">
+    <div class="plan-name">LUXURY</div>
+    <div class="plan-return">~15,75%</div>
+    <div class="plan-info"><span class="plan-share">Sinulle 90%</span><br>25 000–49 999 USD</div>
+  </div>
+  <div class="plan-card">
+    <div class="plan-name">ULTIMATE</div>
+    <div class="plan-return">~16,62%</div>
+    <div class="plan-info"><span class="plan-share">Sinulle 95%</span><br>50 000–99 999 USD</div>
+  </div>
+</div>
+
+<div class="disclaimer fade-in">
+  <strong>⚠️ Tärkeää muistaa:</strong> Kaikki kaupankäynti sisältää aina riskin. Kryptovaluuttamarkkinat voivat olla volatiileja. Menneet tuotot eivät takaa tulevia tuottoja. Sijoitettu pääoma voi osittain tai kokonaan menettää arvonsa. Jokainen tekee omat päätöksensä itsenäisesti.
+</div>
+```
+
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 04 PARTNERI -->
+
+  <section id="partneri">
+    <div class="section-label fade-in">04 — Partneriohjelma</div>
+    <h2 class="fade-in">Rakenna tiimi,<br>ansaitse lisätuloa</h2>
+    <p class="fade-in">Aurumissa on mukana myös partneriohjelma. Voit kutsua mukaan muita ihmisiä ja ansaita siitä — samalla kun he hyötyvät samoista työkaluista kuin sinä. Ei tarvitse myydä, vaan jakaa kokemus ja antaa heidän päättää itse.</p>
+
+```
+<div class="video-wrap fade-in">
+  <div class="video-play">▶</div>
+  <div class="video-label">Katso: Partneriohjelma selitettynä</div>
+  <div class="video-hint">— Lisää YouTube-linkki tähän —</div>
+</div>
+
+<div class="two-col fade-in">
+  <div class="card">
+    <div class="card-icon">👥</div>
+    <h3>Rakenna tiimiä</h3>
+    <p>Kutsu mukaan ihmisiä joita aihe kiinnostaa. Jaat kokemuksen ja annat heidän päättää itse.</p>
+  </div>
+  <div class="card">
+    <div class="card-icon">💸</div>
+    <h3>Passiiviset tulot</h3>
+    <p>Tiimisi kaupankäynti tuottaa sinulle komissiota automaattisesti — myös silloin kun nukut.</p>
+  </div>
+</div>
+```
+
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 05 FAQ -->
+
+  <section id="faq">
+    <div class="section-label fade-in">05 — Usein kysytyt</div>
+    <h2 class="fade-in">Kysymyksiä &amp; vastauksia</h2>
+
+```
+<div class="card fade-in" style="margin-top:24px;">
+  <h3 style="margin-bottom:10px;">Täytyykö minun tietää treidaamisesta?</h3>
+  <p style="margin:0;">Ei. Botti hoitaa kaupankäynnin automaattisesti. Sinun ei tarvitse seurata markkinoita tai tehdä päätöksiä itse.</p>
+</div>
+<div class="card fade-in">
+  <h3 style="margin-bottom:10px;">Onko sijoituspääomani turvassa?</h3>
+  <p style="margin:0;">Rahasi ovat aina sinun — ne eivät ole Aurumin hallussa. Sijoituspääoma on täysin erillinen vuosimaksusta. Kaupankäyntiin liittyy aina riski, sijoita vain sen verran kuin sinulle sopii.</p>
+</div>
+<div class="card fade-in">
+  <h3 style="margin-bottom:10px;">Kuinka pääsen alkuun?</h3>
+  <p style="margin:0;">Rekisteröidy alustalle, maksa vuosimaksu (19,99 USD) ja aloita haluamallasi summalla — minimi 100 USD. Jenna auttaa käytännön asioissa, ota yhteyttä alla.</p>
+</div>
+<div class="card fade-in">
+  <h3 style="margin-bottom:10px;">Onko minun pakko olla partneri?</h3>
+  <p style="margin:0;">Ei. Voit käyttää Aurumia pelkästään omaan kaupankäyntiin ilman partneriohjelmaa. Se on täysin valinnainen lisämahdollisuus.</p>
+</div>
+<div class="card fade-in">
+  <h3 style="margin-bottom:10px;">Missä valuutassa kaupankäynti tapahtuu?</h3>
+  <p style="margin:0;">Botti käy kauppaa USDT:llä (Tether) kryptomarkkinoilla. Tuotot jaetaan USDT:nä.</p>
+</div>
+<div class="card fade-in">
+  <h3 style="margin-bottom:10px;">Miksi kuukausittaiset tuotot vaihtelevat?</h3>
+  <p style="margin:0;">Botti reagoi markkinatilanteeseen — vilkkaampina kuukausina kaupankäyntiä on enemmän. Tavoite on vakaa pitkäaikainen tuotto, ei nopeat voitot.</p>
+</div>
+```
+
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- 06 YHTEYS -->
+
+  <section id="yhteys">
+    <div class="section-label fade-in">06 — Jätä kysymys</div>
+    <h2 class="fade-in">Jäikö jotain mietityttämään?</h2>
+    <p class="fade-in">Jätä kysymys alle niin palataan sinulle sähköpostitse tai sovitaan yhteinen Zoom-hetki. Ei tyhmää kysymystä — mieluummin kysyt kuin jäät epäselväksi.</p>
+
+```
+<div class="form-wrap fade-in">
+  <div class="form-row">
+    <label>Nimesi</label>
+    <input type="text" id="f-name" placeholder="Etunimi riittää">
+  </div>
+  <div class="form-row">
+    <label>Sähköpostiosoitteesi</label>
+    <input type="email" id="f-email" placeholder="sinun@sahkoposti.fi">
+  </div>
+  <div class="form-row">
+    <label>Kysymyksesi</label>
+    <textarea id="f-msg" rows="5" placeholder="Kirjoita vapaasti — kaikki kysymykset ovat ok."></textarea>
+  </div>
+  <button class="btn-submit" onclick="sendForm()">Lähetä kysymys</button>
+  <div class="form-success" id="form-success">
+    Viesti lähetetty — Jenna vastaa sinulle pian sähköpostitse tai ehdottaa Zoom-aikaa.
+  </div>
+</div>
+```
+
+  </section>
+
+  <footer>
+    <div style="font-family:'Orbitron',sans-serif;letter-spacing:3px;margin-bottom:12px;font-size:14px;">
+      AURUM × <span style="color:var(--cyan)">DIGIVIRE</span>
+    </div>
+    <p style="font-size:12px;margin-bottom:8px;">Tämä sivu on tarkoitettu Digiviren Aurum-tiimiläisille.</p>
+    <p style="font-size:12px;">
+      Instagram: <a href="https://instagram.com/digivire" target="_blank">@digivire</a>
+      &nbsp;·&nbsp;
+      Sähköposti: <a href="mailto:digimahis@gmail.com">digimahis@gmail.com</a>
+    </p>
+    <p style="font-size:11px;margin-top:16px;color:#2a4560;">
+      Tämä materiaali on tarkoitettu ainoastaan informatiiviseen käyttöön. Ei sijoitusneuvontaa.
+    </p>
+  </footer>
+
+</div><!-- /main -->
+
+<script>
+  // ── VAIHDA TÄHÄN HALUAMASI SALASANA ──
+  const PASSWORD = "aurum2024";
+
+  function tryLogin() {
+    const val = document.getElementById('pw').value;
+    if (val === PASSWORD) {
+      sessionStorage.setItem('aurum_ok', '1');
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+      initAnimations();
+    } else {
+      const err = document.getElementById('login-err');
+      err.style.display = 'block';
+      document.getElementById('pw').value = '';
+      document.getElementById('pw').focus();
+    }
+  }
+
+  window.addEventListener('load', () => {
+    if (sessionStorage.getItem('aurum_ok') === '1') {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+      initAnimations();
+    }
+  });
+
+  function initAnimations() {
+    const els = document.querySelectorAll('.fade-in');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 70);
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    els.forEach(el => obs.observe(el));
+  }
+
+  function sendForm() {
+    const name  = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const msg   = document.getElementById('f-msg').value.trim();
+    if (!name || !email || !msg) {
+      alert('Täytä kaikki kentät ennen lähettämistä.');
+      return;
+    }
+    const subject = encodeURIComponent('Aurum-tiimi: kysymys — ' + name);
+    const body    = encodeURIComponent('Nimi: ' + name + '\nSähköposti: ' + email + '\n\nKysymys:\n' + msg);
+    window.location.href = 'mailto:digimahis@gmail.com?subject=' + subject + '&body=' + body;
+    document.getElementById('form-success').style.display = 'block';
+    document.getElementById('f-name').value  = '';
+    document.getElementById('f-email').value = '';
+    document.getElementById('f-msg').value   = '';
+  }
+</script>
+
+</body>
+</html>
